@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 700">
+  <rect width="800" height="700" fill="#30343b"/>
+
+  <!-- Schatten -->
+  <ellipse cx="420" cy="590" rx="150" ry="40"
+           fill="#000" opacity="0.15"/>
+
+  <!-- Fuß -->
+  <ellipse cx="420" cy="575" rx="70" ry="22"
+           fill="#ffffff"/>
+
+  <path d="
+    M400 430
+    C390 500 375 540 340 565
+    L500 565
+    C465 540 450 500 440 430
+    Z"
+    fill="#ffffff"/>
+
+  <!-- Außenkörper -->
+  <path d="
+    M250 360
+    C260 260 350 210 520 210
+    C640 210 690 260 680 360
+    C670 450 610 500 470 500
+    C330 500 230 470 250 360
+    Z"
+    fill="#ffffff"/>
+
+  <!-- Linker Flügel -->
+  <path d="
+    M250 360
+    L120 320
+    L70 270
+    L200 300
+    Z"
+    fill="#f0f2f5"/>
+
+  <!-- Oberseite Flügel -->
+  <path d="
+    M200 300
+    L70 270
+    L95 235
+    L225 275
+    Z"
+    fill="#ffffff"/>
+
+  <!-- Farbige Tasten -->
+  <rect x="118" y="255" width="18" height="8"
+        fill="#ff4d4d" transform="rotate(18 118 255)"/>
+  <rect x="140" y="262" width="18" height="8"
+        fill="#ffd84d" transform="rotate(18 140 262)"/>
+  <rect x="162" y="269" width="18" height="8"
+        fill="#52d66a" transform="rotate(18 162 269)"/>
+
+  <!-- Rückenpolster -->
+  <path d="
+    M505 230
+    C600 220 635 250 625 340
+    C615 395 575 405 515 385
+    C485 340 480 270 505 230
+    Z"
+    fill="#ff8355"/>
+
+  <!-- Sitzpolster -->
+  <path d="
+    M295 455
+    C400 470 480 440 530 390
+    C540 380 535 360 515 355
+    C435 410 355 425 285 405
+    C275 420 280 445 295 455
+    Z"
+    fill="#ff7a45"/>
+
+  <!-- Armlehne rechts -->
+  <path d="
+    M525 395
+    C580 405 620 395 650 380
+    L650 340
+    C600 350 555 350 510 345
+    Z"
+    fill="#ffffff"/>
+
+  <!-- Bedienfeld -->
+  <rect x="565" y="360"
+        width="42" height="12"
+        rx="2"
+        fill="#333"/>
+
+  <rect x="568" y="362"
+        width="36" height="3"
+        fill="#ff6b57"/>
+</svg>

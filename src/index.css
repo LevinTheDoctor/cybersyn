@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Scan the UI library's compiled files so Tailwind generates its classes */
+@source "../node_modules/@levin-the-doctor/simple-tailwind-ui/lib";
+
+/* Class-based dark mode via .dark on <html> (used by simple-tailwind-ui) */
+@custom-variant dark (&:where(.dark, .dark *));

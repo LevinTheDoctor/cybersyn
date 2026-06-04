@@ -26,7 +26,7 @@ export function CybersynTimeline({ activeFilter }: CybersynTimelineProps) {
             className="relative flex items-start"
             style={{ width: `${events.length * COL_WIDTH}px` }}
           >
-            <div className="absolute top-[19px] left-[130px] right-[130px] h-0.5 bg-zinc-200 dark:bg-zinc-700 z-0" />
+            <div className="absolute top-[7px] left-[130px] right-[130px] h-0.5 bg-zinc-200 dark:bg-zinc-700 z-0" />
 
             {events.map((event) => (
               <div

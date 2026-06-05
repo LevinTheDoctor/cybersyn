@@ -13,8 +13,7 @@
     "@levin-the-doctor/simple-tailwind-ui": "^1.2.0",
     "@tailwindcss/vite": "^4.3.0",
     "react": "^19.2.6",
-    "react-beautiful-timeline": "^2.0.4",
-    "react-dom": "^19.2.6",
+"react-dom": "^19.2.6",
     "react-markdown": "^10.1.0"
   },
   "devDependencies": {

@@ -26,6 +26,7 @@ export function EventDetailModal({ event, onClose, onPersonClick }: Readonly<Eve
 
   return (
     <Modal open title={event.titel} size="lg" onClose={onClose}>
+      <div className="overflow-y-auto max-h-[65vh] pr-1">
       <div className="space-y-4">
         <div className="flex items-center gap-3">
           <Badge color={badgeColorFuerTag(event.tag)} variant="subtle">
@@ -63,6 +64,7 @@ export function EventDetailModal({ event, onClose, onPersonClick }: Readonly<Eve
             </div>
           </div>
         )}
+      </div>
       </div>
     </Modal>
   );

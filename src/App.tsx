@@ -1,15 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ToastProvider, Tabs, TabPanel, Button } from '@levin-the-doctor/simple-tailwind-ui';
-import { Clock, Users, Moon, Sun } from 'lucide-react';
+import { Clock, Users, BookOpen, FileText, ExternalLink, Moon, Sun } from 'lucide-react';
 import { CybersynTimeline } from './components/CybersynTimeline';
 import { FilterBar } from './components/FilterBar';
-import { PersonsView } from './components/PersonsView';
+import { PersonenTabView } from './components/PersonenTabView';
+import { BegriffeView } from './components/BegriffeView';
+import { MaterialienView } from './components/MaterialienView';
+import { QuellenView } from './components/QuellenView';
 import { DatenschutzModal } from './components/DatenschutzModal';
 import type { Tag } from './types/timeline';
 
 const TAB_ITEMS = [
   { id: 'timeline', label: 'Zeitstrahl', icon: Clock },
-  { id: 'personen', label: 'Personen & Begriffe', icon: Users },
+  { id: 'personen', label: 'Personen', icon: Users },
+  { id: 'begriffe', label: 'Begriffe', icon: BookOpen },
+  { id: 'materialien', label: 'Materialien', icon: FileText },
+  { id: 'quellen', label: 'Quellen', icon: ExternalLink },
 ] as const;
 
 function AppContent() {
@@ -17,10 +23,18 @@ function AppContent() {
   const [activeFilter, setActiveFilter] = useState<Tag | null>(null);
   const [darkMode, setDarkMode] = useState(false);
   const [datenschutzOpen, setDatenschutzOpen] = useState(false);
+  const [highlightedPersonId, setHighlightedPersonId] = useState<string | null>(null);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
   }, [darkMode]);
+
+  const handlePersonClick = useCallback((personId: string) => {
+    setActiveTab('personen');
+    setHighlightedPersonId(personId);
+    const timeout = setTimeout(() => setHighlightedPersonId(null), 2500);
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-900 transition-colors flex flex-col">
@@ -57,12 +71,31 @@ function AppContent() {
           <TabPanel id="timeline">
             <div className="mt-6">
               <FilterBar activeFilter={activeFilter} onFilterChange={setActiveFilter} />
-              <CybersynTimeline activeFilter={activeFilter} />
+              <CybersynTimeline activeFilter={activeFilter} onPersonClick={handlePersonClick} />
             </div>
           </TabPanel>
+
           <TabPanel id="personen">
             <div className="mt-6">
-              <PersonsView />
+              <PersonenTabView highlightedPersonId={highlightedPersonId} />
+            </div>
+          </TabPanel>
+
+          <TabPanel id="begriffe">
+            <div className="mt-6">
+              <BegriffeView />
+            </div>
+          </TabPanel>
+
+          <TabPanel id="materialien">
+            <div className="mt-6">
+              <MaterialienView />
+            </div>
+          </TabPanel>
+
+          <TabPanel id="quellen">
+            <div className="mt-6">
+              <QuellenView />
             </div>
           </TabPanel>
         </Tabs>

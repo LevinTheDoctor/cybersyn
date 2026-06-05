@@ -9,9 +9,10 @@ const COL_WIDTH = 260;
 
 interface CybersynTimelineProps {
   activeFilter: Tag | null;
+  onPersonClick?: (personId: string) => void;
 }
 
-export function CybersynTimeline({ activeFilter }: CybersynTimelineProps) {
+export function CybersynTimeline({ activeFilter, onPersonClick }: Readonly<CybersynTimelineProps>) {
   const events = activeFilter ? EVENTS.filter((e) => e.tag === activeFilter) : EVENTS;
   const [selectedEvent, setSelectedEvent] = useState<TimelineEvent | null>(null);
 
@@ -29,9 +30,10 @@ export function CybersynTimeline({ activeFilter }: CybersynTimelineProps) {
             <div className="absolute top-[7px] left-[130px] right-[130px] h-0.5 bg-zinc-200 dark:bg-zinc-700 z-0" />
 
             {events.map((event) => (
-              <div
+              <button
                 key={event.id}
-                className="flex flex-col items-center relative z-10 group cursor-pointer"
+                type="button"
+                className="flex flex-col items-center relative z-10 group cursor-pointer text-left"
                 style={{ width: `${COL_WIDTH}px` }}
                 onClick={() => setSelectedEvent(event)}
               >
@@ -45,7 +47,7 @@ export function CybersynTimeline({ activeFilter }: CybersynTimelineProps) {
                 <div className="px-2 w-full">
                   <EventCard event={event} />
                 </div>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -57,7 +59,9 @@ export function CybersynTimeline({ activeFilter }: CybersynTimelineProps) {
 
         {events.map((event) => (
           <div key={event.id} className="relative mb-6 last:mb-0">
-            <div
+            <button
+              type="button"
+              aria-label={`${event.titel} öffnen`}
               className="absolute -left-5 top-1.5 w-3.5 h-3.5 rounded-full ring-2 ring-white dark:ring-zinc-900 cursor-pointer hover:scale-125 transition-transform"
               style={{ backgroundColor: farbeFuerTag(event.tag) }}
               onClick={() => setSelectedEvent(event)}
@@ -70,7 +74,11 @@ export function CybersynTimeline({ activeFilter }: CybersynTimelineProps) {
         ))}
       </div>
 
-      <EventDetailModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />
+      <EventDetailModal
+        event={selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+        onPersonClick={onPersonClick}
+      />
     </>
   );
 }

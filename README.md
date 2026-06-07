@@ -1,5 +1,7 @@
 # Projekt Cybersyn – Interaktiver Zeitstrahl
 
+Seite ist Live Unter: cybersyn-levin-dev.de
+
 Responsiver Zeitstrahl zum chilenischen Kybernetik-Projekt **Cybersyn** (1970–1973) unter Salvador Allende.
 
 - **Desktop:** horizontaler Zeitstrahl

@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { Card, Badge } from '@levin-the-doctor/simple-tailwind-ui';
 import type { Person } from '../types/timeline';
 
 interface PersonCardProps {
@@ -21,28 +20,31 @@ export function PersonCard({ person, badgeLabel, highlighted }: Readonly<PersonC
     <div
       id={`person-${person.id}`}
       ref={ref}
-      className={highlighted ? 'ring-2 ring-blue-500 rounded-xl transition-all' : ''}
+      className={`rounded-xl border bg-papier px-5 py-4 shadow-sm transition-all dark:bg-panel ${
+        highlighted ? 'border-signal ring-2 ring-signal' : 'border-tinte/15 dark:border-bezel'
+      }`}
     >
-      <Card title={person.name} variant="elevated" size="md">
-        <div className="flex gap-4">
-          {person.bild && (
-            <img
-              src={person.bild}
-              alt={person.name}
-              className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
-            />
-          )}
-          <div className="flex flex-col gap-2 min-w-0">
-            {badgeLabel && (
-              <Badge color="neutral" variant="subtle">
-                {badgeLabel}
-              </Badge>
-            )}
-            <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{person.rolle}</p>
-            <p className="text-sm text-zinc-700 dark:text-zinc-300">{person.beschreibung}</p>
-          </div>
+      {badgeLabel && (
+        <span className="mb-2 inline-block rounded border border-tinte/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em] text-tinte/50 dark:border-fiberglas/20 dark:text-fiberglas/50">
+          {badgeLabel}
+        </span>
+      )}
+      <div className="flex gap-4">
+        {person.bild && (
+          <img
+            src={person.bild}
+            alt={person.name}
+            className="h-20 w-20 flex-shrink-0 rounded-lg object-cover"
+          />
+        )}
+        <div className="flex min-w-0 flex-col gap-1.5">
+          <h3 className="font-bold text-tinte dark:text-fiberglas">{person.name}</h3>
+          <p className="font-mono text-xs uppercase tracking-[0.1em] text-signal">{person.rolle}</p>
+          <p className="text-sm leading-relaxed text-tinte/70 dark:text-fiberglas/70">
+            {person.beschreibung}
+          </p>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }

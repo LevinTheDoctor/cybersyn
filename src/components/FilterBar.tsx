@@ -1,23 +1,8 @@
-import { Button } from '@levin-the-doctor/simple-tailwind-ui';
 import { useToast } from '@levin-the-doctor/simple-tailwind-ui';
 import type { Tag } from '../types/timeline';
 import { farbeFuerTag } from '../utils/colors';
 
 const ALLE_TAGS: Tag[] = ['Politik', 'Idee', 'Aufbau', 'Technik', 'Krise', 'Ende'];
-
-type ButtonColor = 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'neutral';
-
-function buttonColor(tag: Tag): ButtonColor {
-  const map: Record<Tag, ButtonColor> = {
-    Politik: 'primary',
-    Idee: 'secondary',
-    Aufbau: 'success',
-    Technik: 'warning',
-    Krise: 'danger',
-    Ende: 'neutral',
-  };
-  return map[tag];
-}
 
 interface FilterBarProps {
   activeFilter: Tag | null;
@@ -36,34 +21,52 @@ export function FilterBar({ activeFilter, onFilterChange }: FilterBarProps) {
     }
   }
 
+  const basis =
+    'rounded-lg border px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors';
+
   return (
-    <div className="flex flex-wrap gap-2 mb-6">
-      <Button
-        variant={activeFilter === null ? 'solid' : 'outline'}
-        color="neutral"
-        size="sm"
+    <div className="mb-6 flex flex-wrap gap-2">
+      <button
+        type="button"
         onClick={() => handleFilter(null)}
+        aria-pressed={activeFilter === null}
+        className={`${basis} ${
+          activeFilter === null
+            ? 'border-tinte bg-tinte text-fiberglas dark:border-fiberglas dark:bg-fiberglas dark:text-walnuss'
+            : 'border-tinte/25 text-tinte/60 hover:border-tinte dark:border-fiberglas/25 dark:text-fiberglas/60 dark:hover:border-fiberglas'
+        }`}
       >
         Alle
-      </Button>
-      {ALLE_TAGS.map((tag) => (
-        <Button
-          key={tag}
-          variant={activeFilter === tag ? 'solid' : 'outline'}
-          color={buttonColor(tag)}
-          size="sm"
-          onClick={() => handleFilter(tag)}
-        >
-          <span className="flex items-center gap-1.5">
-            {/* Farbpunkt als visuelle Legende */}
+      </button>
+      {ALLE_TAGS.map((tag) => {
+        const farbe = farbeFuerTag(tag);
+        const aktiv = activeFilter === tag;
+        return (
+          <button
+            key={tag}
+            type="button"
+            onClick={() => handleFilter(tag)}
+            aria-pressed={aktiv}
+            className={`${basis} flex items-center gap-1.5 ${
+              aktiv
+                ? 'text-fiberglas'
+                : 'border-tinte/25 text-tinte/60 dark:border-fiberglas/25 dark:text-fiberglas/60'
+            }`}
+            style={
+              aktiv
+                ? { backgroundColor: farbe, borderColor: farbe }
+                : undefined
+            }
+          >
             <span
-              className="inline-block w-2 h-2 rounded-full flex-shrink-0"
-              style={{ backgroundColor: farbeFuerTag(tag) }}
+              className="inline-block h-2 w-2 flex-shrink-0 rounded-[2px]"
+              style={{ backgroundColor: aktiv ? 'currentColor' : farbe }}
+              aria-hidden="true"
             />
             {tag}
-          </span>
-        </Button>
-      ))}
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -95,10 +95,11 @@ export function MaterialienView() {
             key={r.id}
             type="button"
             onClick={() => setActiveRede(r.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            aria-pressed={activeRede === r.id}
+            className={`rounded-lg border px-4 py-2 font-mono text-[11px] uppercase tracking-[0.15em] transition-colors ${
               activeRede === r.id
-                ? 'bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900'
-                : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'
+                ? 'border-signal bg-signal text-walnuss'
+                : 'border-tinte/25 text-tinte/60 hover:border-signal hover:text-signal dark:border-fiberglas/25 dark:text-fiberglas/60'
             }`}
           >
             {r.titel}
@@ -106,31 +107,31 @@ export function MaterialienView() {
         ))}
       </div>
 
-      <div className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 overflow-hidden">
-        <div className="px-6 py-5 border-b border-zinc-100 dark:border-zinc-700">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{rede.titel}</h2>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
+      <div className="overflow-hidden rounded-xl border border-tinte/15 bg-papier dark:border-bezel dark:bg-panel">
+        <div className="border-b border-tinte/10 px-6 py-5 dark:border-bezel">
+          <h2 className="text-lg font-bold text-tinte dark:text-fiberglas">{rede.titel}</h2>
+          <p className="mt-0.5 font-mono text-xs uppercase tracking-[0.1em] text-tinte/50 dark:text-fiberglas/50">
             Salvador Allende · {rede.datum}
           </p>
-          <div className="flex items-center gap-3 mt-3">
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-zinc-100 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-300">
+          <div className="mt-3 flex items-center gap-3">
+            <span className="inline-flex items-center rounded border border-tinte/15 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.15em] text-tinte/60 dark:border-fiberglas/20 dark:text-fiberglas/60">
               {rede.sprache}
             </span>
-            <span className="text-xs text-zinc-400 dark:text-zinc-500">Quelle: {rede.quelle}</span>
+            <span className="font-mono text-xs text-tinte/40 dark:text-fiberglas/40">Quelle: {rede.quelle}</span>
           </div>
         </div>
 
         <div className="px-6 py-5">
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 italic mb-6 leading-relaxed border-l-2 border-zinc-300 dark:border-zinc-600 pl-4">
+          <p className="mb-6 border-l-2 border-signal pl-4 text-sm italic leading-relaxed text-tinte/70 dark:text-fiberglas/70">
             {rede.kontext}
           </p>
-          <div className="prose prose-sm dark:prose-invert max-w-none">
+          <div className="max-w-none">
             {rede.text.split('\n\n').map((para, i) => (
               <p
                 key={i}
-                className={`text-sm leading-relaxed text-zinc-700 dark:text-zinc-300 mb-4 last:mb-0 ${
+                className={`mb-4 text-sm leading-relaxed text-tinte/80 last:mb-0 dark:text-fiberglas/80 ${
                   para === para.toUpperCase() && para.length > 3
-                    ? 'font-semibold text-zinc-900 dark:text-zinc-100 mt-6'
+                    ? 'mt-6 font-mono font-semibold uppercase tracking-[0.1em] text-tinte dark:text-fiberglas'
                     : ''
                 }`}
               >

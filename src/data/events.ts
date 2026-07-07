@@ -10,6 +10,7 @@ export const EVENTS: TimelineEvent[] = [
     text: 'Salvador Allende wird zum Präsidenten gewählt – der erste demokratisch gewählte sozialistische Präsident Chiles. Er kündigt einen „dritten Weg" an, der sich sowohl von den USA als auch von der Sowjetunion abgrenzt. Sein Ziel: sozialistischer Wandel mit friedlichen Mitteln, unter Wahrung demokratischer Institutionen. Allendes erstes Regierungsjahr brachte bemerkenswerte Ergebnisse: Die Reallöhne der Fabrikarbeiter stiegen um rund 30 Prozent, das BIP wuchs um 7,7 Prozent, die Industrieproduktion um 13,7 Prozent. Bis Ende 1971 wurden alle großen Bergbauunternehmen und 68 weitere Industrien verstaatlicht. Die USA reagierten sofort: Mit verdeckten Operationen finanzierten sie die Opposition und Medien und setzten eine unsichtbare Wirtschaftsblockade in Gang – gekürzte Kredite, gestrichene Hilfen, Sabotage des Kupfermarkts.',
     tag: 'Politik',
     personRefs: ['salvador-allende'],
+    quellenRefs: ['medina-bpb-2023'],
   },
   {
     id: '1971-07-brief-an-beer',
@@ -19,6 +20,7 @@ export const EVENTS: TimelineEvent[] = [
     text: 'Fernando Flores, ein erst 28-jähriger Ingenieur in der Wirtschaftsförderungsbehörde CORFO, schreibt dem britischen Kybernetiker Stafford Beer. Die rasch wachsende Zahl verstaatlichter Betriebe erzeugte enormen Verwaltungsaufwand – Fachkräfte fehlten, Produktionsdaten kamen nur mit monatelanger Verzögerung. Flores bittet Beer um Rat, wie kybernetisches Management auf die chilenische Staatswirtschaft angewendet werden kann. Beer reagiert so begeistert, dass er schreibt, er würde alle anderen Verträge kündigen, um mitzumachen – er glaubte, Chile könnte es wirklich schaffen.',
     tag: 'Idee',
     personRefs: ['fernando-flores', 'stafford-beer'],
+    quellenRefs: ['medina-bpb-2023', 'medina-2011'],
   },
   {
     id: '1971-11-beer-trifft-ein',
@@ -28,6 +30,7 @@ export const EVENTS: TimelineEvent[] = [
     text: 'Am ersten Jahrestag der Regierung Allende kommt Beer in Santiago an. Mit einem kleinen Team beginnt er, seine kybernetischen Modelle auf die chilenische Wirtschaft zu übertragen. Er entwirft das „Projekt Cyberstride", ein vorläufiges Informations- und Kontrollsystem für die Industrie, das schon ab März 1972 bei Entscheidungen helfen soll. Sogenannte Interventors – staatliche Verwalter in den Betrieben – sollen Produktionsdaten täglich per Fernschreiber an das Rechenzentrum ECOM melden.',
     tag: 'Aufbau',
     personRefs: ['stafford-beer', 'fernando-flores'],
+    quellenRefs: ['medina-bpb-2023', 'medina-2011'],
   },
   {
     id: '1972-01-softwareentwicklung',
@@ -37,6 +40,7 @@ export const EVENTS: TimelineEvent[] = [
     text: 'Beer beauftragt von London aus die Beratung Arthur Andersen mit der Software. Um Kosten und Zeit zu sparen, wird die Entwicklung aufgeteilt: London baut eine vorläufige Version als Machbarkeitsnachweis, das chilenische Team eine dauerhafte, auf die chilenische Wirtschaft zugeschnittene Version. Die Software nutzt Bayessche Statistik, um Abweichungen in den Produktionsdaten zu erkennen und Trends vorherzusagen. Die US-Blockade erschwert parallel den Import von Computern und Ersatzteilen erheblich.',
     tag: 'Technik',
     personRefs: ['stafford-beer'],
+    quellenRefs: ['medina-bpb-2023', 'medina-2011'],
   },
   {
     id: '1972-02-cyberstride-wird-cybersyn',
@@ -46,6 +50,7 @@ export const EVENTS: TimelineEvent[] = [
     text: 'Beer reist erneut nach Chile, das Projektteam ist von 10 auf 35 Personen gewachsen. Das ECOM liefert erste Ergebnisse der provisorischen Software. Das Projekt erhält einen neuen Namen: Cybersyn (aus „cybernetics" und „synergy"), auf Spanisch SYNCO (Sistema de Información y Control). Es bekommt vier Komponenten: Cybernet (Telex-Netzwerk), Cyberstride (Statistiksoftware), einen Wirtschaftssimulator und den Operations Room (Opsroom). Beers Ziel: neue Netzwerke für Informationsaustausch in nahezu Echtzeit, die lange Bürokratiewege ersetzen.',
     tag: 'Aufbau',
     personRefs: ['stafford-beer'],
+    quellenRefs: ['medina-bpb-2023', 'medina-2011'],
   },
   {
     id: '1972-10-erster-lastwagenstreik',
@@ -55,6 +60,7 @@ export const EVENTS: TimelineEvent[] = [
     text: 'Tausende Lastwagenfahrer streiken landesweit, um die Wirtschaft lahmzulegen und einen Putsch vorzubereiten. Die Regierung zweckentfremdet das Cybersyn-Telexnetz zur Krisensteuerung: Es reicht von Arica im Norden bis Punta Arenas im Süden (ca. 5.152 km). Beer schätzt etwa 2.000 Nachrichten pro Tag. Das Netz hilft, Treibstoff, Rohstoffe und Transporte gezielt zu lenken. Flores erkennt hier die politischen Grenzen der Technik: Cybersyn kann technische Steuerung leisten, aber nicht die großen Probleme – Inflation, fallende Kupferpreise, drohende Gewalt – lösen. Der Streik wird zum Wendepunkt.',
     tag: 'Krise',
     personRefs: ['fernando-flores', 'salvador-allende'],
+    quellenRefs: ['medina-bpb-2023', 'medina-2011'],
   },
   {
     id: '1972-12-allende-besucht-opsroom',
@@ -65,6 +71,7 @@ export const EVENTS: TimelineEvent[] = [
     tag: 'Aufbau',
     bild: opsroomImg,
     personRefs: ['salvador-allende', 'stafford-beer'],
+    quellenRefs: ['medina-bpb-2023', 'vehlken-2022'],
   },
   {
     id: '1973-02-werkzeug-des-volkes',
@@ -74,6 +81,7 @@ export const EVENTS: TimelineEvent[] = [
     text: 'In einem Vortrag erklärt Beer, wie sein kybernetischer Ansatz die Bevölkerung befähigen und Macht dezentralisieren soll. Die Werkzeuge seien gemeinsam mit den Arbeitern entwickelt worden und damit „Werkzeuge des Volkes" – kein Instrument staatlicher Kontrolle, sondern ein Mittel zur Selbstorganisation. Beer betonte, eine Regierung brauche „kompetente Informationen, die frei handeln können". Die Opposition kontert und vergleicht das System mit staatlicher Überwachung.',
     tag: 'Politik',
     personRefs: ['stafford-beer'],
+    quellenRefs: ['medina-bpb-2023'],
   },
   {
     id: '1973-08-zweiter-streik',
@@ -83,6 +91,7 @@ export const EVENTS: TimelineEvent[] = [
     text: 'Die Opposition organisiert einen zweiten Lastwagenstreik. Erneut nutzt die Regierung das Telexnetz für adaptives Echtzeit-Management. Trotzdem eskaliert die Gewalt – bis Mitte August sterben 20 Menschen. Allende ernennt Flores mit nur 30 Jahren zum Generalsekretär der Regierung, einer der höchsten Positionen in einer Regierung unter Beschuss. Die CIA unterstützt die Destabilisierung im Hintergrund.',
     tag: 'Krise',
     personRefs: ['salvador-allende', 'fernando-flores'],
+    quellenRefs: ['medina-bpb-2023'],
   },
   {
     id: '1973-09-putsch',
@@ -93,5 +102,6 @@ export const EVENTS: TimelineEvent[] = [
     tag: 'Ende',
     bild: sturzImg,
     personRefs: ['salvador-allende', 'fernando-flores'],
+    quellenRefs: ['medina-bpb-2023'],
   },
 ];

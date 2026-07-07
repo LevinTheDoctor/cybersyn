@@ -36,7 +36,7 @@ export function BegriffeView() {
   return (
     <div className="space-y-10">
       <section>
-        <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">Beteiligte Organisationen</h2>
+        <h2 className="mb-4 text-xl font-bold tracking-tight text-tinte dark:text-fiberglas">Beteiligte Organisationen</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {ORGANISATIONEN.map((org) => (
             <PersonCard key={org.id} person={org} badgeLabel="Organisation" />
@@ -45,7 +45,7 @@ export function BegriffeView() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">Die vier Komponenten von Cybersyn</h2>
+        <h2 className="mb-4 text-xl font-bold tracking-tight text-tinte dark:text-fiberglas">Die vier Komponenten von Cybersyn</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {CYBERSYN_KOMPONENTEN.map((k) => (
             <PersonCard key={k.id} person={k} badgeLabel="Komponente" />
@@ -54,15 +54,15 @@ export function BegriffeView() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">Glossar</h2>
+        <h2 className="mb-4 text-xl font-bold tracking-tight text-tinte dark:text-fiberglas">Glossar</h2>
         <div className="grid grid-cols-1 gap-3">
           {GLOSSAR.map((eintrag) => (
             <div
               key={eintrag.id}
-              className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 px-5 py-4"
+              className="rounded-xl border border-tinte/15 bg-papier px-5 py-4 dark:border-bezel dark:bg-panel"
             >
-              <dt className="font-semibold text-zinc-900 dark:text-zinc-100 mb-1">{eintrag.term}</dt>
-              <dd className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">{eintrag.definition}</dd>
+              <dt className="mb-1 font-semibold text-tinte dark:text-fiberglas">{eintrag.term}</dt>
+              <dd className="text-sm leading-relaxed text-tinte/70 dark:text-fiberglas/70">{eintrag.definition}</dd>
             </div>
           ))}
         </div>

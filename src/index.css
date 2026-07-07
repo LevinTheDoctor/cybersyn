@@ -5,3 +5,67 @@
 
 /* Class-based dark mode via .dark on <html> (used by simple-tailwind-ui) */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Opsroom-Materialpalette (nach dem Original von 1972, Bonsiepe/INTEC):
+ * Holzwände, Fiberglas-Sessel, Signal-Orange, algedonisches Alarmrot,
+ * Phosphor-Ton für "Live-Daten".
+ */
+@theme {
+  --color-walnuss: #26201b;
+  --color-panel: #393028;
+  --color-bezel: #4a4036;
+  --color-fiberglas: #efe7da;
+  --color-papier: #fbf7ee;
+  --color-tinte: #2b241d;
+  --color-signal: #d96c2c;
+  --color-algedonik: #e23b2e;
+  --color-phosphor: #8fc1b5;
+
+  --font-sans: "Chivo Variable", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --animate-ticker: ticker 60s linear infinite;
+  --animate-blink: blink 1.2s steps(2, start) infinite;
+  --animate-flow: flow 1.5s linear infinite;
+  --animate-einblenden: einblenden 0.3s ease-out;
+
+  @keyframes ticker {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0.15;
+    }
+  }
+  @keyframes flow {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+  @keyframes einblenden {
+    from {
+      opacity: 0;
+      transform: scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

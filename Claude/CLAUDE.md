@@ -7,11 +7,13 @@ Hier stehen alle Konventionen, Datenmodelle und Muster, die im Projekt verwendet
 
 ## Zweck der App
 
-Interaktiver, responsiver Zeitstrahl zum chilenischen Kybernetik-Projekt Cybersyn (1970–1973).
+Interaktive Wissensseite zum chilenischen Kybernetik-Projekt Cybersyn (1970–1973): Zeitstrahl,
+begehbarer Opsroom-Nachbau, System-Diagramme, Personen, Materialien und Literaturverzeichnis.
 Gehostet via Cloudflare Pages. Keine Backend-Anbindung, rein statisch.
 
 Bildungskontext: Wissenschaftsarbeit. Inhalte nach Eden Medina, „Kybernetischer Revolutionär",
-bpb.de (CC BY-NC-ND 3.0 DE) – Quellennennung ist Pflicht.
+bpb.de (CC BY-NC-ND 3.0 DE) – Quellennennung ist Pflicht. Levin nutzt die Seite als persönliche
+Wissenssammlung: **alle Inhalte leben in `src/data/` und sind ohne Komponenten-Änderungen erweiterbar.**
 
 ---
 
@@ -20,21 +22,46 @@ bpb.de (CC BY-NC-ND 3.0 DE) – Quellennennung ist Pflicht.
 | Was | Womit |
 |---|---|
 | Framework | React 19 + Vite 8 + TypeScript 6 |
-| Styling | Tailwind CSS v4 (`@import "tailwindcss"` in index.css) |
-| UI-Komponenten | `@levin-the-doctor/simple-tailwind-ui` |
+| Styling | Tailwind CSS v4 (`@import "tailwindcss"` in index.css, Design-Tokens via `@theme`) |
+| UI-Komponenten | `@levin-the-doctor/simple-tailwind-ui` (nur noch Modal/Tabs/Toast) + eigene Panels |
+| Fonts | `@fontsource-variable/chivo` (Display/Body), `@fontsource/ibm-plex-mono` (Daten/Captions) — selbst gehostet, DSGVO-konform |
 | Icons | `lucide-react` |
-| Build | `npm run dev` / `npm run build` |
+| Build | `npm run dev` / `npm run build` / `npm run lint` |
 
 **Tailwind v4-Besonderheit:** Kein `tailwind.config.js`. Konfiguration ausschließlich in CSS.
 Die UI-Lib braucht `@source "../node_modules/@levin-the-doctor/simple-tailwind-ui/lib";` in
 `src/index.css`, damit ihre Klassen generiert werden.
 
-**Dark Mode:** Klasse `dark` auf `<html>` (class-based). Custom-Variant in index.css:
-`@custom-variant dark (&:where(.dark, .dark *));`
-Umschalter sitzt im Header (Moon/Sun-Icon).
+**npm install:** Immer `--legacy-peer-deps` verwenden (`.npmrc` enthält `legacy-peer-deps=true`).
 
-**npm install:** Immer `--legacy-peer-deps` verwenden (`.npmrc` enthält `legacy-peer-deps=true`),
-da `react-beautiful-timeline` noch `react@^18` als Peer erwartet, das Projekt aber React 19 nutzt.
+---
+
+## Design-System („Opsroom-Identität“)
+
+Definiert als `@theme`-Tokens in `src/index.css` — abgeleitet vom echten Opsroom von 1972
+(Gui Bonsiepe / INTEC): Holzwände, Fiberglas-Sessel, Signal-Orange, algedonisches Alarmrot.
+
+| Token | Tailwind-Klasse | Hex | Verwendung |
+|---|---|---|---|
+| `--color-walnuss` | `bg-walnuss` | `#26201b` | Dark-Hintergrund (Holzwände) |
+| `--color-panel` | `bg-panel` | `#393028` | Dark-Panelflächen |
+| `--color-bezel` | `border-bezel` | `#4a4036` | Dark-Rahmen |
+| `--color-fiberglas` | `bg-fiberglas` | `#efe7da` | Light-Hintergrund, Dark-Textfarbe |
+| `--color-papier` | `bg-papier` | `#fbf7ee` | Light-Panelflächen |
+| `--color-tinte` | `text-tinte` | `#2b241d` | Light-Textfarbe |
+| `--color-signal` | `text-signal` | `#d96c2c` | Orange-Akzent, aktive Elemente |
+| `--color-algedonik` | `text-algedonik` | `#e23b2e` | Nur Alarme/Krise |
+| `--color-phosphor` | `text-phosphor` | `#8fc1b5` | „Live-Daten“, Screens |
+
+**Typografie:** Chivo (`font-sans`, Standard) für alles; IBM Plex Mono (`font-mono`) für Daten,
+Datumsangaben, Panel-Labels (versal + `tracking-[0.2em]`), Ticker, Zitationen.
+
+**Modi:** Dark = Standard („Opsroom“), Light = „Archiv“. Toggle im Header, gemerkt in
+`localStorage['cybersyn-modus']`. Klasse `dark` auf `<html>` (class-based, Custom-Variant in index.css).
+
+**Animationen** (`@theme`-Keyframes): `animate-ticker` (Laufband), `animate-blink` (Alarmlampen),
+`animate-flow` (SVG-Datenpulse via stroke-dashoffset), `animate-einblenden` (Stations-Zoom).
+`prefers-reduced-motion` stoppt global alle Animationen (Regel am Ende von index.css).
 
 ---
 
@@ -42,42 +69,58 @@ da `react-beautiful-timeline` noch `react@^18` als Peer erwartet, das Projekt ab
 
 ```
 src/
-├── App.tsx                        # Root: 5 Tabs, Dark-Mode, highlightedPersonId-Navigation
-├── main.tsx                       # Einstiegspunkt
-├── index.css                      # Tailwind v4 + @source für UI-Lib
+├── App.tsx                        # Root: 6 Tabs, Dark-Default, Personen- & Quellen-Navigation
+├── main.tsx                       # Einstieg + Font-Imports
+├── index.css                      # Tailwind v4, @theme-Tokens, Keyframes, reduced-motion
+│
+├── context/
+│   └── quellenNav.ts              # QuellenNavContext: geheZuQuelle(id) aus App.tsx
 │
 ├── types/
-│   └── timeline.ts                # TimelineEvent (+ personRefs), Person, Tag, GlossarEintrag
+│   └── timeline.ts                # TimelineEvent, Person, Tag, GlossarEintrag, Quelle
 │
-├── data/
-│   ├── events.ts                  # 10 Zeitstrahl-Ereignisse (kurzText + text + bild + personRefs)
+├── data/                          # ⭐ ALLE INHALTE — hier erweitern
+│   ├── events.ts                  # 10 Zeitstrahl-Ereignisse (+ personRefs, quellenRefs)
 │   ├── personen.ts                # PERSONEN, GEGENSPIELER, ORGANISATIONEN, GLOSSAR
-│   └── images.ts                  # Vite-Imports aller Bilder aus src/assets/images/
+│   ├── quellen.ts                 # Literaturverzeichnis (aus Zotero-Bib übernommen)
+│   ├── opsroom.ts                 # Die 6 Opsroom-Stationen
+│   ├── system.ts                  # Diagramm-Inhalte: FLOW_KNOTEN, VSM_EBENEN, NETZ_KNOTEN
+│   ├── ticker.ts                  # Telex-Ticker-Meldungen (Header)
+│   └── images.ts                  # Vite-Imports aller Bilder
 │
 ├── components/
+│   ├── ui/
+│   │   ├── Panel.tsx              # Bezel-Card mit Mono-Label + Kontrolllampe
+│   │   ├── QuelleRef.tsx          # [Medina 2011]-Chips + QuellenZeile (springen zum Quellen-Tab)
+│   │   ├── TagChip.tsx            # Kategorie-Chip mit Farblampe
+│   │   └── TelexTicker.tsx        # Laufband im Header
+│   ├── opsroom/
+│   │   ├── OpsroomView.tsx        # Tab: Intro-Panel + Panorama (Desktop) / Liste (mobil) + Detail
+│   │   ├── OpsroomPanorama.tsx    # SVG-Innenansicht des Hexagons, 6 fokussierbare Hotspots
+│   │   └── stations/              # index.ts = Registry Stations-ID → Komponente
+│   │       ├── DatafeedStation    # 4 „Dias“ + Armlehnen-Tasten
+│   │       ├── AlgedonikStation   # Krisen-Slider → Blinkfrequenz + Eskalation
+│   │       ├── VsmStation         # Mini-VSM + Link zum System-Tab
+│   │       ├── FuturoStation      # CHECO: 2 Regler → Projektion
+│   │       ├── MagnetwandStation  # Verschiebbare Magnete (Pointer + Pfeiltasten)
+│   │       └── SesselStation      # Tulip-Sessel mit 3 erklärten Hotspots
+│   ├── system/
+│   │   ├── SystemView.tsx         # Tab: 3 Diagramm-Panels + BegriffeView darunter
+│   │   ├── SystemFlowDiagram.tsx  # Datenfluss Betrieb→…→Opsroom→Feedback (animiert, klickbar)
+│   │   ├── VsmDiagram.tsx         # Interaktives VSM S1–S5 inkl. algedonischem Kanal
+│   │   └── ChileNetzMap.tsx       # Telex-Karte mit Streik-Simulation (Toggle)
 │   ├── CybersynTimeline.tsx       # Zeitstrahl (desktop horizontal / mobil vertikal)
-│   ├── EventCard.tsx              # Karte im Zeitstrahl (kurzText, line-clamp-3, klickbar)
-│   ├── EventDetailModal.tsx       # Modal mit Ereignis-Text + Bild + Personen-Chips
-│   ├── FilterBar.tsx              # Tag-Filter-Leiste mit Toast-Feedback
-│   ├── PersonCard.tsx             # Personen-/Organisations-Karte mit Bild + highlighted-Prop
-│   ├── PersonenTabView.tsx        # Tab "Personen": Schlüsselfiguren + Gegenspieler
-│   ├── BegriffeView.tsx           # Tab "Begriffe": Orgs + Komponenten + Glossar
-│   ├── MaterialienView.tsx        # Tab "Materialien": zwei Allende-Reden (marxists.org)
-│   ├── QuellenView.tsx            # Tab "Quellen": YouTube-Embeds + Artikellinks
-│   └── DatenschutzModal.tsx       # DSGVO-Datenschutztext, öffnet aus Footer
+│   ├── EventCard.tsx / EventDetailModal.tsx / FilterBar.tsx
+│   ├── PersonCard.tsx / PersonenTabView.tsx
+│   ├── BegriffeView.tsx           # Orgs + Komponenten + Glossar (im System-Tab eingebettet)
+│   ├── MaterialienView.tsx        # Zwei Allende-Reden
+│   ├── QuellenView.tsx            # Literaturverzeichnis, Sprungziel der QuelleRef-Chips
+│   └── DatenschutzModal.tsx       # DSGVO-Text, öffnet aus Footer
 │
 ├── utils/
-│   └── colors.ts                  # farbeFuerTag() → CSS-Farbe, badgeColorFuerTag() → BadgeColor
+│   └── colors.ts                  # farbeFuerTag() — 70er-Palette, immer hier ändern
 │
-└── assets/
-    └── images/                    # Alle historischen Bilder (PNG)
-        ├── SalvdorAllende.png
-        ├── StraffordBeer.png
-        ├── FernandoFlores.png
-        ├── NorbertWeiner.png
-        ├── CorforLogo.png
-        ├── CyberSynOperatiosnRoom.png
-        └── 119Sturz.png           # Bild vom Militärputsch 11.9.1973
+└── assets/images/                 # Historische Bilder (Opsroom-Foto als JPG optimiert)
 ```
 
 ---
@@ -87,154 +130,117 @@ src/
 | Tab-ID | Label | Icon | Komponente |
 | --- | --- | --- | --- |
 | `timeline` | Zeitstrahl | Clock | `CybersynTimeline` + `FilterBar` |
+| `opsroom` | Opsroom | Armchair | `OpsroomView` |
+| `system` | System | Network | `SystemView` (Diagramme + `BegriffeView`) |
 | `personen` | Personen | Users | `PersonenTabView` |
-| `begriffe` | Begriffe | BookOpen | `BegriffeView` |
 | `materialien` | Materialien | FileText | `MaterialienView` |
-| `quellen` | Quellen | ExternalLink | `QuellenView` |
+| `quellen` | Quellen | Library | `QuellenView` |
 
 ---
 
-## Datenmodell
-
-### TimelineEvent (`src/types/timeline.ts`)
+## Datenmodell (`src/types/timeline.ts`)
 
 ```ts
 interface TimelineEvent {
-  id: string;           // slug, z.B. "1970-wahl-allendes"
-  datum: string;        // Anzeigedatum
+  id: string;            // slug, z.B. "1970-wahl-allendes"
+  datum: string;
   titel: string;
-  kurzText: string;     // 1–2 Sätze für die Karte im Zeitstrahl
-  text: string;         // Volltext für das Detail-Modal
+  kurzText: string;      // 1–2 Sätze für die Karte
+  text: string;          // Volltext fürs Modal
   tag: Tag;
-  bild?: string;        // URL aus Vite-Import (optional)
-  personRefs?: string[]; // IDs aus PERSONEN/GEGENSPIELER für Chips im Modal
+  bild?: string;
+  personRefs?: string[]; // IDs aus PERSONEN/GEGENSPIELER
+  quellenRefs?: string[]; // IDs aus QUELLEN → Chips im Modal
 }
 
 type Tag = 'Politik' | 'Idee' | 'Aufbau' | 'Technik' | 'Krise' | 'Ende';
-```
 
-### Person (`src/types/timeline.ts`)
-
-```ts
-interface Person {
-  id: string;
-  name: string;
-  rolle: string;
-  beschreibung: string;
-  bild?: string;    // URL aus Vite-Import (optional)
+interface Quelle {
+  id: string;            // z.B. "medina-2011"
+  typ: 'buch' | 'artikel' | 'online' | 'video';
+  kurz: string;          // Chip-Label, z.B. "Medina 2011"
+  autor: string; titel: string; jahr: string;
+  medium?: string; doi?: string; url?: string;
+  embedId?: string;      // YouTube-ID → Video wird im Quellen-Tab eingebettet
+  beschreibung?: string;
 }
 ```
 
-### GlossarEintrag (`src/types/timeline.ts`)
-
-```ts
-interface GlossarEintrag {
-  id: string;
-  term: string;
-  definition: string;
-}
-```
+`Person` und `GlossarEintrag` unverändert (Glossar hat jetzt optional `quellenRefs`).
 
 ---
 
-## Personen-Navigation (Timeline → Personen-Tab)
+## Navigations-Muster
 
-Wenn im `EventDetailModal` ein Personen-Chip geklickt wird:
+**Personen** (bestehend): Chip im `EventDetailModal` → `onPersonClick` → App setzt
+`activeTab='personen'` + `highlightedPersonId` → `PersonCard` scrollt hin, Ring 2,5 s.
 
-1. Modal schließt sich (`onClose()`)
-2. `onPersonClick(personId)` wird nach oben an `App.tsx` weitergegeben
-3. `App.tsx` setzt `activeTab = 'personen'` und `highlightedPersonId = personId`
-4. `PersonenTabView` gibt `highlighted={highlightedPersonId === person.id}` an `PersonCard` weiter
-5. `PersonCard` scrollt via `useEffect` + `ref.scrollIntoView()` zur Karte und zeigt blauem Ring
-6. Nach 2,5 Sekunden löscht `App.tsx` das Highlight automatisch
+**Quellen** (neu, ohne Prop-Drilling): `QuellenNavContext` (`src/context/quellenNav.ts`) stellt
+`geheZuQuelle(id)` app-weit bereit. `<QuelleRef quelleId="…"/>` oder
+`<QuellenZeile quellenIds={[…]}/>` überall einsetzbar (Diagramme, Stationen, Modals).
+Im `EventDetailModal` wird der Context lokal überschrieben, damit sich das Modal vorher schließt.
 
 ---
 
 ## Farb-Mapping (Tags)
 
-Definiert in `src/utils/colors.ts`. Immer hier ändern, nie inline.
+Definiert in `src/utils/colors.ts` (70er-Töne, zur Opsroom-Palette passend). Immer hier ändern.
 
-| Tag | Dot-Farbe (hex) | Badge-Farbe |
-|---|---|---|
-| Politik | `#3B82F6` (blau) | `info` |
-| Idee | `#A855F7` (lila) | `neutral` |
-| Aufbau | `#22C55E` (grün) | `success` |
-| Technik | `#F59E0B` (gelb) | `warning` |
-| Krise | `#EF4444` (rot) | `error` |
-| Ende | `#6B7280` (grau) | `neutral` |
+| Tag | Hex |
+|---|---|
+| Politik | `#4A7FB5` | Idee | `#8E6FAE` | Aufbau | `#5E8C61` |
+| Technik | `#D9A13B` | Krise | `#E23B2E` | Ende | `#7A736A` |
 
 ---
 
 ## UI-Bibliothek: simple-tailwind-ui
 
-Vollständige Doku in `Claude/simple-tailwind-ui.md`.
+Vollständige Doku in `Claude/simple-tailwind-ui.md`. Wird nur noch für **Modal, Tabs, Toast**
+genutzt — Cards/Badges/Buttons sind durch eigene Komponenten (Panel, TagChip, styled buttons) ersetzt.
 
 **Wichtige Gotchas:**
-- `<Tabs size="full">` ist Pflicht – ohne `size="full"` setzt die Lib `max-w-md` (448px) auf
-  den gesamten Container und alles wird abgeschnitten.
-- `<TabPanel>` ist ein reines Fragment – keine eigenen Styles, keine Overflow-Beschränkung.
-- `<Modal>` hat intern `overflow-hidden` **und keinen eigenen Scroll-Container**. Für scrollbare
-  Modal-Inhalte den Kindbereich mit `overflow-y-auto max-h-[65vh]` wrappen – nie den Modal
-  selbst versuchen zu überschreiben.
-- `<Badge>` erhält Text als `children`, nicht als `label`-Prop (abweichend von mancher Doku).
+- `<Tabs size="full">` ist Pflicht – ohne `size="full"` setzt die Lib `max-w-md` auf den Container.
+- `<TabPanel>` ist ein reines Fragment.
+- `<Modal>` hat intern `overflow-hidden`: scrollbare Inhalte mit `overflow-y-auto max-h-[65vh]` wrappen.
 
 ---
 
-## Zeitstrahl-Architektur
-
-### Desktop (≥ md = 768px)
-- `hidden md:block` Wrapper
-- `overflow-x-auto pt-3 pb-4` Scroll-Container (`pt-3` gibt Dots Platz beim Hover-Scale)
-- Inneres Flex-Div: feste Breite `events.length * 260px`
-- Horizontale Linie: `absolute top-[7px]` relativ zum inneren Div
-- Jede Spalte: `w-[260px]`, `<button type="button">` → Dot → Datum → EventCard von oben nach unten
-- Rechts-Fade-Overlay (`pointer-events-none`) zeigt Scrollbarkeit an
-
-### Mobil (< md)
-- `md:hidden` Wrapper
-- Vertikale Linie links (`absolute left-3`)
-- Dots: `<button type="button" aria-label="…">` mit `absolute -left-5`, Datum + Karte rechts
-
-### Klick-Interaktion
-- `CybersynTimeline` hält `selectedEvent: TimelineEvent | null`
-- Klick öffnet `<EventDetailModal>` mit `onPersonClick`-Callback
-- Dot-Hover: `hover:scale-125` mit `transition-transform`
-
----
-
-## Neue Inhalte hinzufügen
+## Neue Inhalte hinzufügen (⭐ Levins Wissenssammlung)
 
 ### Neues Zeitstrahl-Ereignis
-1. Eintrag in `src/data/events.ts` nach dem Muster der bestehenden Events anlegen
-2. `tag` muss ein bestehender `Tag`-Wert sein (sonst TypeScript-Fehler)
-3. `kurzText`: 1–2 Sätze für die Karte
-4. `text`: vollständiger Absatz für das Modal
-5. `bild`: optional – Bild nach `src/assets/images/` kopieren, in `src/data/images.ts`
-   importieren und hier referenzieren
-6. `personRefs`: optional – Array mit IDs aus `PERSONEN` oder `GEGENSPIELER`
+1. Eintrag in `src/data/events.ts` nach bestehendem Muster
+2. `tag` muss ein `Tag`-Wert sein; `personRefs`/`quellenRefs` optional
 
-### Neue Person / Organisation
+### Neue Quelle (Literaturverzeichnis)
+1. Eintrag in `src/data/quellen.ts` anlegen (`id` + `kurz` vergeben)
+2. Überall referenzieren mit `quellenRefs: ['<id>']` oder `<QuelleRef quelleId="<id>"/>`
+3. Videos: `embedId` setzen → wird automatisch im Quellen-Tab eingebettet
 
-1. `PERSONEN`, `GEGENSPIELER` oder `ORGANISATIONEN` in `src/data/personen.ts` erweitern
-2. Bild optional wie oben beschrieben
+### Neue Opsroom-Station
+1. Datensatz in `src/data/opsroom.ts` ergänzen
+2. Komponente unter `src/components/opsroom/stations/` anlegen
+3. In `stations/index.ts` registrieren (`STATION_KOMPONENTEN`)
+4. Optional: Hotspot im `OpsroomPanorama.tsx` einzeichnen (mobil erscheint sie automatisch in der Liste)
 
-### Neues Glossar-Wort
+### Diagramm-Inhalte ändern
+- Datenfluss-Knoten: `FLOW_KNOTEN` in `src/data/system.ts`
+- VSM-Texte/Chile-Mapping: `VSM_EBENEN`
+- Telex-Städte: `NETZ_KNOTEN` (Koordinaten im viewBox 0 0 260 840)
 
-1. Eintrag in `GLOSSAR`-Array in `src/data/personen.ts` anlegen
+### Ticker-Meldung
+1. Zeile in `src/data/ticker.ts` anhängen (Konvention: Versalien, keine Umlaute — Telex-Stil)
+
+### Neue Person / Organisation / Glossar-Wort
+Wie bisher in `src/data/personen.ts` (PERSONEN / GEGENSPIELER / ORGANISATIONEN / GLOSSAR).
 
 ### Neues Bild
-1. PNG nach `src/assets/images/` kopieren
-2. In `src/data/images.ts` als Named Export importieren:
-   ```ts
-   import meinBildImg from '../assets/images/MeinBild.png';
-   export { meinBildImg };
-   ```
-3. In `events.ts` oder `personen.ts` als `bild: meinBildImg` verwenden
+1. Nach `src/assets/images/` legen (Fotos als JPG, Grafiken als PNG/SVG; > 500 KB vorher verkleinern)
+2. In `src/data/images.ts` importieren/exportieren, dann als `bild:` referenzieren
 
-### Neuen Tag hinzufügen
+### Neuer Tag
 1. `src/types/timeline.ts`: Union-Type `Tag` erweitern
-2. `src/utils/colors.ts`: beide Maps (`TAG_FARBEN`, `TAG_BADGE_FARBEN`) ergänzen
-3. `src/components/FilterBar.tsx`: `ALLE_TAGS`-Array und `buttonColor`-Map ergänzen
+2. `src/utils/colors.ts`: `TAG_FARBEN` ergänzen
+3. `src/components/FilterBar.tsx`: `ALLE_TAGS`-Array ergänzen
 
 ---
 
@@ -242,3 +248,4 @@ Vollständige Doku in `Claude/simple-tailwind-ui.md`.
 
 Cloudflare Pages. Build-Befehl: `npm run build`, Output-Verzeichnis: `dist`.
 Datenschutz-Hinweis im Footer und `DatenschutzModal` sind gesetzlich erforderlich (DSGVO).
+Fonts sind selbst gehostet (kein Google-CDN) — wichtig für die Datenschutzerklärung.

@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/chivo": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
     "@levin-the-doctor/simple-tailwind-ui": "^1.2.0",
     "@tailwindcss/vite": "^4.3.0",
     "react": "^19.2.6",
-"react-dom": "^19.2.6",
+    "react-dom": "^19.2.6",
     "react-markdown": "^10.1.0"
   },
   "devDependencies": {
